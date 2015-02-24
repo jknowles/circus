@@ -1,0 +1,14 @@
+Package: circus
+Type: Package
+Title: Cluster Identification in R for Categorization and Unsupervised Learning
+Version: 0.1
+Date: 2015-02-18
+Author: Jared E. Knowles
+Maintainer: jknowles@gmail.com
+Description: Implements methods to train and compare unsupervised cluster identification
+models. Includes empirical tests for cluster cohesiveness and discrimination.
+License: GPL-2
+LazyData: TRUE
+Depends:
+  e1071,
+  caret
