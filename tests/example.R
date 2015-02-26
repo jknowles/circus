@@ -1,11 +1,42 @@
 # Examples
 
+library(cluster)
+library(e1071)
+
 # TuneGrid
 # Distance metrics
 # Number of clusters
 # Model tuning parameters
 
 data(iris)
+
+# bagged clustering
+## centers = k
+## base.centers = bc
+
+
+resampleIdx <- 1:10
+tuneGrid <- expand.grid(.k = c(3, 5, 7, 9),
+                        .bc = c(3, 5, 10, 20),
+                        rowIdx = resampleIdx)
+
+tuneGrid$metric <- NA
+
+for(i in 1:nrow(tuneGrid)){
+  parm <- tuneGrid[i, ]
+  tmpDat <- iris[sample(row.names(iris), nrow(iris), replace = TRUE), ]
+  tmpMod <- try(bclust(tmpDat[, 1:4], centers = parm$.k, base.centers = parm$.bc))
+  tuneGrid[i, "metric"] <- try(fclustIndex(tmpMod, tmpDat[, 1:4], index = "partition.entropy"))
+}
+
+
+
+
+
+
+
+
+
 bc1 <- bclust(iris[,1:4], 3, base.centers=5)
 
 library(cluster)
