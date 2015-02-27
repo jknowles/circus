@@ -1,5 +1,10 @@
 # Cluster comparisons
 # From e1071
+
+# Summary functions
+
+
+
 fclustIndex <- function (y, x, index = "all")
 {
   clres <- y
