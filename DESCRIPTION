@@ -1,4 +1,4 @@
-Package: circus
+Package: circul
 Type: Package
 Title: Cluster Identification in R for Categorization and Unsupervised Learning
 Version: 0.1
