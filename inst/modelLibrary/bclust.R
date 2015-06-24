@@ -25,7 +25,7 @@ modelInfo <- list(label = "Bagged Clustering",
                     bclust(x = x, centers = param$centers,
                            dist.method = param$dist.method, ...)
                   },
-                  predict = function(modelFit, newdata, submodels = NULL){
+                  predict = function(modelFit, newdata, submodels = NULL, ...){
                     theDots <- list(...)
                     bclust(x = newdata,
                            centers = length(unique(modelFit$cluster)),

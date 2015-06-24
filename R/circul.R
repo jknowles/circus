@@ -1,6 +1,54 @@
 # Circul function
 
-circul.default <- function(x, y, method = 'bclust',
+
+circus.simple <- function(x, method = 'bclust',
+                          metric = 'separation.index',
+                          cirControl = NULL,
+                          tuneGrid = NULL,
+                          modelType = 'Classification',
+                          tuneLength = 3) {
+
+  resampIdx <- createDataPartition(x[, 1], times = 10, p = 0.25)
+
+
+}
+
+library(e1071)
+data(iris)
+bc1 <- bclust(iris[,1:4], 3, base.centers=5)
+
+grid1 <- modelInfo$grid(iris, len = 3)
+resampIdx <- createDataPartition(iris[, 1], times = 10, p = 0.25)
+
+for(i in seq(along = resampIdx)){
+  for(j in 1:nrow(grid1)){
+    tmpMod <- modelInfo$fit(x = iris[resampIdx[[i]], 1:4], param = grid1[j, ])
+    tmpIdx <- row.names(iris)[!row.names(iris) %in% resampIdx[[i]]]
+    out1 <- modelInfo$predict(tmpMod, iris[tmpIdx, 1:4], param = grid1[j, ])
+
+
+
+
+
+
+    fclustIndex(tmpMod, index = 'partition.entropy')
+
+
+
+
+  }
+}
+
+
+
+m1 <- modelInfo$fit(x = iris[idx1, 1:4], param = grid1[2,])
+
+pred1 <- modelInfo$predict(m1, newdata = iris[idx2, 1:4])
+
+
+
+
+circus.default <- function(x, y, method = 'bclust',
                            preProcess = NULL, ...,
                            weights = NULL,
                            metric = "separation.index",

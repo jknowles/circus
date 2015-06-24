@@ -39,7 +39,7 @@ checkInstall <- function(pkg){
   }
 }
 
-"createModel" <-function(x, y, wts, method, tuneValue, obsLevels, pp = NULL, last = FALSE, classProbs, ...) {
+"createModel" <-function(x, wts, method, tuneValue, obsLevels, pp = NULL, last = FALSE, classProbs, ...) {
   if(!is.null(pp$options))
   {
     pp$method <- pp$options
