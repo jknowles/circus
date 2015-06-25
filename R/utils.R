@@ -8,7 +8,7 @@
 #' @details Based on the getModelInfo function in the \link{\code{caret}} package
 #' @export
 getModelInfo <- function(model = NULL, regex = TRUE, ...) {
-  load(system.file("inst/models/models.RData", package = "circul"))
+  load(system.file("models/models.RData", package = "circul"))
   if(!is.null(model)){
     keepers <- if(regex) grepl(model, names(models), ...) else which(model == names(models))[1]
     models <- models[keepers]

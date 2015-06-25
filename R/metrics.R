@@ -10,7 +10,7 @@ fuzzySummary <- function(clres, method = 'pe'){
   method  <- match.arg(method, c("fs", "pe", "pc", "propexp"),
                        several.ok = FALSE)
   if(method == "fs"){
-    score <- fukyama.sugeno(clres)
+    score <- fukuyama.sugeno(clres)
   } else if(method == "pe"){
     score <- partition.entropy(clres)
   } else if(method == "pc"){
@@ -27,7 +27,7 @@ fuzzySummary <- function(clres, method = 'pe'){
 #' @return a numeric value for the cluster performance
 fukuyama.sugeno <- function(clres) {
   xrows <- dim(clres$me)[1]
-  ncenters <- dim(tmpMod$cent)[1]
+  ncenters <- dim(clres$cent)[1]
   error <- clres$within
   k2 <- as.double(0)
   meancenters <- apply(clres$ce, 2, mean)

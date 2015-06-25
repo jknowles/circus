@@ -35,26 +35,32 @@ circul <- function(x, method = 'cmeans',
     trainSum <- rep(NA, length(resampIdx))
     testSum <- rep(NA, length(resampIdx))
     for(i in seq(along = resampIdx)){
-      tmpMod <- modelInfo$fit(x = moddat[resampIdx[[i]], ], param = parmGrid[j, ])
+      tmpMod <- models$fit(x = x[resampIdx[[i]], ], param = parmGrid[j, ])
       #     if(anyNA(tmpMod$membership)){
-      #       try(tmpMod <- modelInfo$fit(x = moddat[resampIdx[[i]], ], param = parmGrid[j, ]))
+      #       try(tmpMod <- models$fit(x = x[resampIdx[[i]], ], param = parmGrid[j, ]))
       #     }
-      tmpIdx <- row.names(moddat)[!row.names(moddat) %in% resampIdx[[i]]]
-      out1 <- modelInfo$predict(tmpMod, newdata = moddat[tmpIdx, ], param = parmGrid[j, ])
+      tmpIdx <- row.names(x)[!row.names(x) %in% resampIdx[[i]]]
+      out1 <- models$predict(tmpMod, newdata = x[tmpIdx, ], param = parmGrid[j, ])
       #     if(anyNA(out1$membership)){
-      #       try(out1 <- modelInfo$predict(tmpMod, newdata = moddat[tmpIdx, ], param = parmGrid[j, ]))
+      #       try(out1 <- models$predict(tmpMod, newdata = x[tmpIdx, ], param = parmGrid[j, ]))
       #     }
-      trainSum[i] <- fuzzySummary(tmpMod, method = metric)
-      testSum[i] <- fuzzySummary(out1, method = metric)
+      trainSum[i] <- try(fuzzySummary(tmpMod, method = metric))
+      testSum[i] <- try(fuzzySummary(out1, method = metric))
       rm(tmpMod)
       rm(out1)
+    }
+    if(anyNA(testSum)){
+      warning("NA values in performance metric on test data")
+    }
+    if(anyNA(trainSum)){
+      warning("NA values in performance metric on train data")
     }
     parmGrid[j, "testSumMEAN"] <- mean(testSum)
     parmGrid[j, "trainSumMEAN"] <- mean(trainSum)
     parmGrid[j, "testSumSD"] <- sd(testSum)
     parmGrid[j, "trainSumSD"] <- sd(trainSum)
   }
-  return(grid)
+  return(parmGrid)
 }
 
 
