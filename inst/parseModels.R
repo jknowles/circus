@@ -1,6 +1,6 @@
-# setwd("~/Code/github/caret/models/files")
+# setwd("inst/modelLibrary/")
 # modelFiles <- list.files(pattern = "\\.R$")
-#
+# #
 # models <- vector(mode = "list", length = length(modelFiles))
 # names(models) <- gsub("\\.R$", "", modelFiles)
 #
@@ -9,9 +9,9 @@
 #   models[[i]] <- modelInfo
 #   rm(modelInfo)
 # }
+# #
+# save(models, file = "../models/models.RData")
 #
-# save(models, file = "../../pkg/caret/inst/models/models.RData")
-
 # Model objects have:
 
 # http://topepo.github.io/caret/custom_models.html

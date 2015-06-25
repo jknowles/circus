@@ -32,25 +32,29 @@ modelInfo <- list(label = "Fuzzy C-Means Clustering",
                   },
                   predict = function(modelFit, newdata, submodels = NULL, ...){
                     theDots <- list(...)
-                    L <- nrow(newdata)
-                    newdata <- rbind(newdata, modelFit$x)
+                    # L <- nrow(newdata)
+                    # newdata <- rbind(newdata, modelFit$x)
                     pred <- cmeans(x = newdata,
                                   centers = theDots$param$centers,
                                   dist = theDots$param$dist,
-                                  m = theDots$param$m, method = 'cmeans')$cluster[1:L, ]
-
+                                  m = theDots$param$m, method = 'cmeans')
                     return(pred)
                   },
-                  prob = function(modelFit, newdata, submodels = NULL){
+                  prob = function(modelFit, newdata, submodels = NULL, ...){
                     theDots <- list(...)
+                    if(!missing(newdata)){
+                      newdata <- rbind(newdata, modelFit$x)
+                    } else {
+                      newdata <- modelFit$x
+                    }
                     L <- nrow(newdata)
-                    newdata <- rbind(newdata, modelFit$x)
-                    mem <- cmeans(x = newdata,
+                    pred <- cmeans(x = newdata,
                                   centers = theDots$param$centers,
                                   dist = theDots$param$dist,
-                                  m = theDots$param$m, method = 'cmeans')$membership[1:L, ]
-                    cen <- tmpMod$centers
-                    return(list(membership = mem, centers = cen))
+                                  m = theDots$param$m, method = 'cmeans')
+                    return(list(centers = pred$centers, withinerror = pred$withinerror,
+                                membership = pred$membership[1:L, ],
+                                cluster = pred$cluster[1:L]))
                   },
                   varImp = function(object, ...) {
                     stop("Not written")

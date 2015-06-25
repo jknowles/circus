@@ -13,7 +13,7 @@
 #   Check Package:             'Ctrl + Shift + E'
 #   Test Package:              'Ctrl + Shift + T'
 
-circus <- function(x) {
+# circul <- function(x) {
 
   # Pre-process?
   ## Scale and center?
@@ -36,4 +36,4 @@ circus <- function(x) {
 
   # refit best model and store
   # Output object with best model, performance metrics, etc.
-}
+# }
