@@ -1,6 +1,6 @@
 modelInfo <- list(label = "Fuzzy C-Means Clustering",
                   "library" = c("e1071"),
-                  type = c('Classification'),
+                  type = c('Classification', 'Fuzzy'),
                   parameters = data.frame(parameter = c('centers', 'dist', 'm'),
                                           class = c('integer', 'character','numeric'),
                                           label = c('#Number of clusters, k',
@@ -28,6 +28,7 @@ modelInfo <- list(label = "Fuzzy C-Means Clustering",
                            dist = param$dist,
                            m = param$m, method = 'cmeans', ...)
                     mod$x <- x
+                    class(mod) <- c(class(mod), "clres")
                     return(mod)
                   },
                   predict = function(modelFit, newdata, submodels = NULL, ...){
@@ -38,6 +39,8 @@ modelInfo <- list(label = "Fuzzy C-Means Clustering",
                                   centers = theDots$param$centers,
                                   dist = theDots$param$dist,
                                   m = theDots$param$m, method = 'cmeans')
+                    pred$x <- newdata
+                    class(pred) <- c(class(pred), "clres")
                     return(pred)
                   },
                   prob = function(modelFit, newdata, submodels = NULL, ...){

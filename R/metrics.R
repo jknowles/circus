@@ -3,7 +3,6 @@
 #' @param clres results of a cluster algorithm
 #' @param method a character representing the abbreviation of the metric, "fs",
 #' "pe", "pc", or "propexp", see details
-#'
 #' @return a numeric value for the cluster performance
 #' @export
 fuzzySummary <- function(clres, method = 'pe'){
@@ -20,6 +19,29 @@ fuzzySummary <- function(clres, method = 'pe'){
   }
   return(score)
 }
+
+#' Calculate cluster performance metrics for fuzzy clusters
+#'
+#' @param clres results of a cluster algorithm
+#' @param method a character representing the abbreviation of the metric, see
+#' \link{\code{clusterCrit}} for details, "Silhouette" is default
+#' @return a numeric value for the cluster performance
+#' @importFrom clusterCrit intCriteria
+#' @export
+criteriaSummary <- function(clres, method = 'Silhouette'){
+  inp <- as.matrix(clres$x)
+  clus <- as.integer(clres$cluster)
+  #intCriteria cannot accept NA values
+  if(anyNA(clus)){
+    warning("NA values found in cluster vector, criteria cannot be computed")
+    return(NA)
+  } else{
+    score <- clusterCrit::intCriteria(traj = inp,
+                                      part = clus, crit = method)
+    return(as.numeric(score))
+  }
+}
+
 
 #' Calculate the Fukukama-Sugeno Cluster Metric
 #'

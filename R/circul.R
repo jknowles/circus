@@ -14,7 +14,7 @@
 #' @export
 #'
 circul <- function(x, method = 'cmeans',
-                          metric = 'pe',
+                          metric = NULL,
                           cirControl = NULL,
                           tuneGrid = NULL,
                           modelType = 'Classification',
@@ -29,23 +29,38 @@ circul <- function(x, method = 'cmeans',
                                                 list(package = models$library[i]))
 
   resampIdx <- createDataPartition(x[, 1], times = 10, p = 0.25)
-  parmGrid <- models$grid(iris, len = tuneLength)
+  parmGrid <- models$grid(x, len = tuneLength)
+  if(modelType == "Classification"){
+    sumFunc <- criteriaSummary
+    if(missing(metric)){
+      metric <- "Silhouette"
+    }
+  } else if(modelType == "Fuzzy"){
+    sumFunc <- fuzzySummary
+    if(missing(metric)){
+      metric <- "pe"
+    }
+  }
 
   for(j in 1:nrow(parmGrid)){
     trainSum <- rep(NA, length(resampIdx))
     testSum <- rep(NA, length(resampIdx))
     for(i in seq(along = resampIdx)){
       tmpMod <- models$fit(x = x[resampIdx[[i]], ], param = parmGrid[j, ])
-      #     if(anyNA(tmpMod$membership)){
-      #       try(tmpMod <- models$fit(x = x[resampIdx[[i]], ], param = parmGrid[j, ]))
-      #     }
+      if(any(class(tmpMod) %in% c("clres", "cluster"))){
+        trainSum[i] <- try(sumFunc(clres = tmpMod, method = metric))
+      } else {
+        message("Iteration ___ of training resample failed")
+        trainSum[i] <- NA
+      }
       tmpIdx <- row.names(x)[!row.names(x) %in% resampIdx[[i]]]
       out1 <- models$predict(tmpMod, newdata = x[tmpIdx, ], param = parmGrid[j, ])
-      #     if(anyNA(out1$membership)){
-      #       try(out1 <- models$predict(tmpMod, newdata = x[tmpIdx, ], param = parmGrid[j, ]))
-      #     }
-      trainSum[i] <- try(fuzzySummary(tmpMod, method = metric))
-      testSum[i] <- try(fuzzySummary(out1, method = metric))
+      if(any(class(out1) %in% c("clres", "cluster"))){
+        testSum[i] <- try(sumFunc(clres = out1, method = metric))
+      } else {
+        message("Iteration ___ of training resample failed")
+        testSum[i] <- NA
+      }
       rm(tmpMod)
       rm(out1)
     }

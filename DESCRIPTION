@@ -8,7 +8,8 @@ Description: Implements methods to train and compare unsupervised cluster identi
 Depends:
   R (>= 3.0.2),
   e1071,
-  caret
+  caret,
+  clusterCrit
 License: MIT + file LICENSE
 LazyData: true
 VignetteBuilder: knitr

@@ -4,7 +4,7 @@
 \alias{circul}
 \title{Train an unsupervised learning model}
 \usage{
-circul(x, method = "cmeans", metric = "pe", cirControl = NULL,
+circul(x, method = "cmeans", metric = NULL, cirControl = NULL,
   tuneGrid = NULL, modelType = "Classification", tuneLength = 3)
 }
 \arguments{

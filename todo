@@ -1,0 +1,10 @@
+# Package functionality to-dos
+
+- Extend the model library
+- Build unit tests for methods in the model library
+- Set up control structure
+- Build object class for result of "circul"
+- plot, print, and summary methods for circul
+- document and identify cluster performance metrics
+- optional methods for resampling
+- switch to clusterCrit package for computing cluster performance

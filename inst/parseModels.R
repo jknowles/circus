@@ -11,7 +11,7 @@
 # }
 # #
 # save(models, file = "../models/models.RData")
-#
+
 # Model objects have:
 
 # http://topepo.github.io/caret/custom_models.html
