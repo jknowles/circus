@@ -1,43 +1,47 @@
 #' Calculate cluster performance metrics for fuzzy clusters
 #'
 #' @param clres results of a cluster algorithm
-#' @param method a character representing the abbreviation of the metric, "fs",
+#' @param metric a character representing the abbreviation of the metric, "fs",
 #' "pe", "pc", or "propexp", see details
 #' @return a numeric value for the cluster performance
 #' @export
-fuzzySummary <- function(clres, method = 'pe'){
-  method  <- match.arg(method, c("fs", "pe", "pc", "propexp"),
+fuzzySummary <- function(clres, metric = 'pe'){
+  method  <- match.arg(metric, c("fs", "pe", "pc", "propexp"),
                        several.ok = FALSE)
   if(method == "fs"){
-    score <- fukuyama.sugeno(clres)
+    score <- try(fukuyama.sugeno(clres))
   } else if(method == "pe"){
-    score <- partition.entropy(clres)
+    score <- try(partition.entropy(clres))
   } else if(method == "pc"){
-    score <- partition.coefficient(clres)
+    score <- try(partition.coefficient(clres))
   } else if(method == "propexp"){
-    score <- proportion.exponent(clres)
+    score <- try(proportion.exponent(clres))
   }
+  score <- as.numeric(score)
   return(score)
 }
 
 #' Calculate cluster performance metrics for fuzzy clusters
 #'
 #' @param clres results of a cluster algorithm
-#' @param method a character representing the abbreviation of the metric, see
+#' @param metric a character representing the abbreviation of the metric, see
 #' \link{\code{clusterCrit}} for details, "Silhouette" is default
 #' @return a numeric value for the cluster performance
 #' @importFrom clusterCrit intCriteria
 #' @export
-criteriaSummary <- function(clres, method = 'Silhouette'){
+criteriaSummary <- function(clres, metric = 'Silhouette'){
   inp <- as.matrix(clres$x)
   clus <- as.integer(clres$cluster)
+  crit <- getCriteriaNames(TRUE)[pmatch(metric, getCriteriaNames(TRUE))]
+  stopifnot(class(crit) == "character")
+  crit <- crit[1]
   #intCriteria cannot accept NA values
   if(anyNA(clus)){
     warning("NA values found in cluster vector, criteria cannot be computed")
     score <- NA
   } else{
-    score <- clusterCrit::intCriteria(traj = inp,
-                                      part = clus, crit = method)
+    score <- try(clusterCrit::intCriteria(traj = inp,
+                                      part = clus, crit = crit))
   }
   return(as.numeric(score))
 }

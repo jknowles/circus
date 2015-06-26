@@ -4,7 +4,7 @@
 \alias{circul}
 \title{Train an unsupervised learning model}
 \usage{
-circul(x, method = "cmeans", metric = NULL, cirControl = NULL,
+circul(x, method = "cmeans", metric = NULL, circulControl = NULL,
   tuneGrid = NULL, modelType = "Classification", tuneLength = 3)
 }
 \arguments{
@@ -14,13 +14,13 @@ circul(x, method = "cmeans", metric = NULL, cirControl = NULL,
 
 \item{metric}{a character representing the performance metric to calculate}
 
-\item{cirControl}{a list of control parameters}
-
 \item{tuneGrid}{a tuning grid of paramater values}
 
 \item{modelType}{the type of model}
 
 \item{tuneLength}{the length of the tuneGrid}
+
+\item{cirControl}{a list of control parameters}
 }
 \value{
 a data.frame with performance metrics

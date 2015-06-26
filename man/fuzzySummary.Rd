@@ -4,12 +4,12 @@
 \alias{fuzzySummary}
 \title{Calculate cluster performance metrics for fuzzy clusters}
 \usage{
-fuzzySummary(clres, method = "pe")
+fuzzySummary(clres, metric = "pe")
 }
 \arguments{
 \item{clres}{results of a cluster algorithm}
 
-\item{method}{a character representing the abbreviation of the metric, "fs",
+\item{metric}{a character representing the abbreviation of the metric, "fs",
 "pe", "pc", or "propexp", see details}
 }
 \value{

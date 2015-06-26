@@ -4,12 +4,12 @@
 \alias{criteriaSummary}
 \title{Calculate cluster performance metrics for fuzzy clusters}
 \usage{
-criteriaSummary(clres, method = "Silhouette")
+criteriaSummary(clres, metric = "Silhouette")
 }
 \arguments{
 \item{clres}{results of a cluster algorithm}
 
-\item{method}{a character representing the abbreviation of the metric, see
+\item{metric}{a character representing the abbreviation of the metric, see
 \link{\code{clusterCrit}} for details, "Silhouette" is default}
 }
 \value{

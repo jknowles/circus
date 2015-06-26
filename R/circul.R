@@ -11,15 +11,18 @@
 #' @return a data.frame with performance metrics
 #' @importFrom caret createDataPartition
 #' @importFrom caret checkInstall
+#' @importFrom caret createResample
 #' @export
 #'
 circul <- function(x, method = 'cmeans',
                           metric = NULL,
-                          cirControl = NULL,
+                          circulControl = NULL,
                           tuneGrid = NULL,
                           modelType = 'Classification',
                           tuneLength = 3) {
-
+  if(missing(circulControl)){
+    stop("Must specify the control parmaters to circul.")
+  }
   models <- getModelInfo(method, regex = FALSE)[[1]]
   if (length(models) == 0) {
     stop(paste("Model", method, "is not in caret's built-in library"))
@@ -27,9 +30,15 @@ circul <- function(x, method = 'cmeans',
   caret::checkInstall(models$library)
   for(i in seq(along = models$library)) do.call("require",
                                                 list(package = models$library[i]))
-
-  resampIdx <- caret::createDataPartition(x[, 1], times = 10, p = 0.25)
+  if(circulControl$method == "cv"){
+    resampIdx <- caret::createDataPartition(x[, 1],
+                                            times = circulControl$number,
+                                            p = circulControl$p)
+  } else if(circulControl$method == "boot"){
+    resampIdx <- caret::createResample(x[, 1], times = circulControl$number)
+  }
   parmGrid <- models$grid(x, len = tuneLength)
+  L <- ncol(parmGrid)
   if(modelType == "Classification"){
     sumFunc <- criteriaSummary
     if(missing(metric)){
@@ -45,27 +54,27 @@ circul <- function(x, method = 'cmeans',
     trainSum <- rep(NA, length(resampIdx))
     testSum <- rep(NA, length(resampIdx))
     for(i in seq(along = resampIdx)){
-      tmpMod <- try(models$fit(x = x[resampIdx[[i]], ], param = parmGrid[j, ]))
+      tmpDat <- x[resampIdx[[i]], ]
+      tmpMod <- try(models$fit(x = tmpDat, param = parmGrid[j, 1:L]))
       if(any(class(tmpMod) %in% c("clres", "cluster"))){
-        trainSum[i] <- sumFunc(clres = tmpMod, method = metric)
+        trainSum[i] <- sumFunc(clres = tmpMod, metric = metric)
       } else {
         message("Iteration ___ of training resample failed")
         trainSum[i] <- NA
       }
-      tmpIdx <- row.names(x)[!row.names(x) %in% resampIdx[[i]]]
-      out1 <- try(models$predict(tmpMod, newdata = x[tmpIdx, ], param = parmGrid[j, ]))
-      if(any(class(out1) %in% c("clres", "cluster"))){
-        testSum[i] <- try(sumFunc(clres = out1, method = metric))
-      } else {
-        message("Iteration ___ of training resample failed")
-        testSum[i] <- NA
-      }
-      rm(tmpMod)
-      rm(out1)
-    }
-    if(anyNA(testSum)){
-      warning("NA values in performance metric on test data")
-    }
+#       # tmpIdx <- row.names(x)[!row.names(x) %in% resampIdx[[i]]]
+#       out1 <- try(models$predict(tmpMod, newdata = x, param = parmGrid[j, 1:L]))
+#       if(any(class(out1) %in% c("clres", "cluster"))){
+#         testSum[i] <- try(sumFunc(clres = out1, metric = metric))
+#       } else {
+#         message("Iteration ___ of training resample failed")
+#         testSum[i] <- NA
+#       }
+#       rm(tmpMod, out1)
+     }
+#     if(anyNA(testSum)){
+#       warning("NA values in performance metric on test data")
+#     }
     if(anyNA(trainSum)){
       warning("NA values in performance metric on train data")
     }
@@ -74,7 +83,23 @@ circul <- function(x, method = 'cmeans',
     parmGrid[j, "testSumSD"] <- sd(testSum)
     parmGrid[j, "trainSumSD"] <- sd(trainSum)
   }
-  return(parmGrid)
+  if(modelType == "Classification"){
+    bestIdx <- clusterCrit::bestCriterion(parmGrid$testSumMEAN, crit = metric)
+  } else {
+    bestIdx <- row.names(parmGrid)[parmGrid$testSumMEAN == max(parmGrid$testSumMEAN, na.rm=TRUE)]
+  }
+
+  bestIdx <- ifelse(is.na(bestIdx), 1, bestIdx)
+  bestIdx <- ifelse(length(bestIdx) > 1, bestIdx[1], bestIdx)
+
+  bestMod <-  models$fit(x = x, param = parmGrid[bestIdx, 1:L])
+
+  out <- list(method = method, modelType = modelType,
+              results = parmGrid, bestTune = parmGrid[bestIdx, 1:L],
+              call = match.call, metric = metric, finalModel = bestMod,
+              traininData = x, perfNames = names(parmGrid[, L:ncol(parmGrid)]),
+              maximize = TRUE)
+  return(out)
 }
 
 
