@@ -54,27 +54,27 @@ circul <- function(x, method = 'cmeans',
     trainSum <- rep(NA, length(resampIdx))
     testSum <- rep(NA, length(resampIdx))
     for(i in seq(along = resampIdx)){
-      tmpDat <- x[resampIdx[[i]], ]
-      tmpMod <- try(models$fit(x = tmpDat, param = parmGrid[j, 1:L]))
+      tmpMod <- try(models$fit(x = x[resampIdx[[i]], ], param = parmGrid[j, 1:L]))
       if(any(class(tmpMod) %in% c("clres", "cluster"))){
         trainSum[i] <- sumFunc(clres = tmpMod, metric = metric)
       } else {
         message("Iteration ___ of training resample failed")
         trainSum[i] <- NA
       }
-#       # tmpIdx <- row.names(x)[!row.names(x) %in% resampIdx[[i]]]
-#       out1 <- try(models$predict(tmpMod, newdata = x, param = parmGrid[j, 1:L]))
-#       if(any(class(out1) %in% c("clres", "cluster"))){
-#         testSum[i] <- try(sumFunc(clres = out1, metric = metric))
-#       } else {
-#         message("Iteration ___ of training resample failed")
-#         testSum[i] <- NA
-#       }
-#       rm(tmpMod, out1)
+      tmpIdx <- row.names(x)[!row.names(x) %in% resampIdx[[i]]]
+      out1 <- try(models$predict(tmpMod, newdata =  x[tmpIdx, ],
+                                 param = parmGrid[j, 1:L]))
+      if(any(class(out1) %in% c("clres", "cluster"))){
+        testSum[i] <- try(sumFunc(clres = out1, metric = metric))
+      } else {
+        message("Iteration ___ of training resample failed")
+        testSum[i] <- NA
+      }
+      rm(tmpMod, out1)
      }
-#     if(anyNA(testSum)){
-#       warning("NA values in performance metric on test data")
-#     }
+    if(anyNA(testSum)){
+      warning("NA values in performance metric on test data")
+    }
     if(anyNA(trainSum)){
       warning("NA values in performance metric on train data")
     }

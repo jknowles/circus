@@ -39,7 +39,11 @@ criteriaSummary <- function(clres, metric = 'Silhouette'){
   if(anyNA(clus)){
     warning("NA values found in cluster vector, criteria cannot be computed")
     score <- NA
-  } else{
+    # you cannot put in 0 dimensional objects or intCriteria will segfault
+  } else if(nrow(inp) != length(clus) | nrow(inp) ==0 | length(clus) == 0){
+    warning("Non-conformable inputs, criteria cannot be computed")
+    score <- NA
+  } else {
     score <- try(clusterCrit::intCriteria(traj = inp,
                                       part = clus, crit = crit))
   }
