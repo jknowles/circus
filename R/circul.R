@@ -28,7 +28,7 @@ circul <- function(x, method = 'cmeans',
   for(i in seq(along = models$library)) do.call("require",
                                                 list(package = models$library[i]))
 
-  resampIdx <- createDataPartition(x[, 1], times = 10, p = 0.25)
+  resampIdx <- caret::createDataPartition(x[, 1], times = 10, p = 0.25)
   parmGrid <- models$grid(x, len = tuneLength)
   if(modelType == "Classification"){
     sumFunc <- criteriaSummary
@@ -41,20 +41,19 @@ circul <- function(x, method = 'cmeans',
       metric <- "pe"
     }
   }
-
   for(j in 1:nrow(parmGrid)){
     trainSum <- rep(NA, length(resampIdx))
     testSum <- rep(NA, length(resampIdx))
     for(i in seq(along = resampIdx)){
-      tmpMod <- models$fit(x = x[resampIdx[[i]], ], param = parmGrid[j, ])
+      tmpMod <- try(models$fit(x = x[resampIdx[[i]], ], param = parmGrid[j, ]))
       if(any(class(tmpMod) %in% c("clres", "cluster"))){
-        trainSum[i] <- try(sumFunc(clres = tmpMod, method = metric))
+        trainSum[i] <- sumFunc(clres = tmpMod, method = metric)
       } else {
         message("Iteration ___ of training resample failed")
         trainSum[i] <- NA
       }
       tmpIdx <- row.names(x)[!row.names(x) %in% resampIdx[[i]]]
-      out1 <- models$predict(tmpMod, newdata = x[tmpIdx, ], param = parmGrid[j, ])
+      out1 <- try(models$predict(tmpMod, newdata = x[tmpIdx, ], param = parmGrid[j, ]))
       if(any(class(out1) %in% c("clres", "cluster"))){
         testSum[i] <- try(sumFunc(clres = out1, method = metric))
       } else {

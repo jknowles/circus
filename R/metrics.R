@@ -34,12 +34,12 @@ criteriaSummary <- function(clres, method = 'Silhouette'){
   #intCriteria cannot accept NA values
   if(anyNA(clus)){
     warning("NA values found in cluster vector, criteria cannot be computed")
-    return(NA)
+    score <- NA
   } else{
     score <- clusterCrit::intCriteria(traj = inp,
                                       part = clus, crit = method)
-    return(as.numeric(score))
   }
+  return(as.numeric(score))
 }
 
 

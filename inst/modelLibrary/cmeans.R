@@ -9,7 +9,7 @@ modelInfo <- list(label = "Fuzzy C-Means Clustering",
                   grid = function(x, len = NULL) {
                     p <- ncol(x)
                     n <- nrow(x)
-                    distMethods <- c("euclidean", "manhattan")
+                    distMethods <- c("euclidean")
                     kmax <- max(c(3, 2 + len))
                     # minsizeMax <- max(c(10, n/(kmax^2)))
                     k <- ceiling(seq(2, kmax, length.out = len))

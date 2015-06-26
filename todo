@@ -8,3 +8,4 @@
 - document and identify cluster performance metrics
 - optional methods for resampling
 - switch to clusterCrit package for computing cluster performance
+- bug in proportion exponent fuzzy metric
