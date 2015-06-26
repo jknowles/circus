@@ -31,7 +31,7 @@ sumFunc(zed, metric = metric)
 sumFunc(zed, metric = "Tau")
 sumFunc(zed, metric = "Gamma")
 
-intCriteria(as.matrix(myData), zed$cluster, metric)
+intCriteria(as.matrix(myData)[0,], zed$cluster[0], crit = "a")
 
 
 zed <- circul(x = myData, method = "cmeans", tuneLength = 3,
