@@ -3,7 +3,7 @@ modelInfo <- list(label = "Fuzzy C-Means Clustering",
                   type = c('Classification', 'Fuzzy'),
                   parameters = data.frame(parameter = c('centers', 'dist', 'm'),
                                           class = c('integer', 'character','numeric'),
-                                          label = c('#Number of clusters, k',
+                                          label = c('Number of clusters, k',
                                                     'Distance method',
                                                     'Degree of fuzzification')),
                   grid = function(x, len = NULL) {

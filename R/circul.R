@@ -12,6 +12,7 @@
 #' @importFrom caret createDataPartition
 #' @importFrom caret checkInstall
 #' @importFrom caret createResample
+#' @importFrom clusterCrit bestCriterion
 #' @export
 #'
 circul <- function(x, method = 'cmeans',
@@ -39,6 +40,10 @@ circul <- function(x, method = 'cmeans',
   }
   parmGrid <- models$grid(x, len = tuneLength)
   L <- ncol(parmGrid)
+  if(!modelType %in% models$type){
+    stop(paste0("Method", method, " cannot fit a ", modelType, " model type. \n
+                Please use the ", models$type, " option."))
+  }
   if(modelType == "Classification"){
     sumFunc <- criteriaSummary
     if(missing(metric)){
@@ -54,7 +59,7 @@ circul <- function(x, method = 'cmeans',
     trainSum <- rep(NA, length(resampIdx))
     testSum <- rep(NA, length(resampIdx))
     for(i in seq(along = resampIdx)){
-      tmpMod <- try(models$fit(x = x[resampIdx[[i]], ], param = parmGrid[j, 1:L]))
+      tmpMod <- try(models$fit(x = x[resampIdx[[i]], ], param = parmGrid[j, 1:L, drop=FALSE]))
       if(any(class(tmpMod) %in% c("clres", "cluster"))){
         trainSum[i] <- sumFunc(clres = tmpMod, metric = metric)
       } else {
@@ -63,7 +68,7 @@ circul <- function(x, method = 'cmeans',
       }
       tmpIdx <- row.names(x)[!row.names(x) %in% resampIdx[[i]]]
       out1 <- try(models$predict(tmpMod, newdata =  x[tmpIdx, ],
-                                 param = parmGrid[j, 1:L]))
+                                 param = parmGrid[j, 1:L, drop=FALSE]))
       if(any(class(out1) %in% c("clres", "cluster"))){
         testSum[i] <- try(sumFunc(clres = out1, metric = metric))
       } else {
@@ -92,12 +97,12 @@ circul <- function(x, method = 'cmeans',
   bestIdx <- ifelse(is.na(bestIdx), 1, bestIdx)
   bestIdx <- ifelse(length(bestIdx) > 1, bestIdx[1], bestIdx)
 
-  bestMod <-  models$fit(x = x, param = parmGrid[bestIdx, 1:L])
+  bestMod <-  models$fit(x = x, param = parmGrid[bestIdx, 1:L, drop=FALSE])
 
   out <- list(method = method, modelType = modelType,
-              results = parmGrid, bestTune = parmGrid[bestIdx, 1:L],
+              results = parmGrid, bestTune = parmGrid[bestIdx, 1:L, drop=FALSE],
               call = match.call, metric = metric, finalModel = bestMod,
-              traininData = x, perfNames = names(parmGrid[, L:ncol(parmGrid)]),
+              traininData = x, perfNames = names(parmGrid[, L:ncol(parmGrid), drop=FALSE]),
               maximize = TRUE)
   return(out)
 }

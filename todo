@@ -9,5 +9,5 @@
 - optional methods for resampling
 - switch to clusterCrit package for computing cluster performance
 - bug in proportion exponent fuzzy metric
-- Bug in classification criteria causing hard crash
+X - Bug in classification criteria causing hard crash
 

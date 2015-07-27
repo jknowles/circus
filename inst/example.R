@@ -3,7 +3,7 @@ library(circul)
 myData <- rbind(iris[, 1:4], iris[, 1:4])
 myData <- rbind(myData, myData)
 
-myCont <- list(method = "cv", number = 5, p = 0.75)
+myCont <- list(method = "cv", number = 10, p = 0.75)
 myCont <- list(method = "boot", number = 25, p = 0.75)
 
 zed <- circul(x = myData, method = "cmeans", tuneLength = 3,
@@ -32,6 +32,19 @@ sumFunc(zed, metric = "Tau")
 sumFunc(zed, metric = "Gamma")
 
 intCriteria(as.matrix(myData)[0,], zed$cluster[0], crit = "a")
+
+data(EPIA)
+mod <- EstCRMitem(data = EPIA, max.item = apply(EPIA, 2, max),
+           min.item = apply(EPIA, 2, min))
+mod2 <- EstCRMperson(data = EPIA, ipar = mod$param, min.item = mod$descriptive$Min,
+                     max.item = mod$descriptive$Max)
+
+temp <- as.data.frame(mod2[1])
+temp$class <- cut(temp$thetas.Theta.Est.,
+                  breaks = quantile(temp$thetas.Theta.Est.,
+                                    seq(0, 1, 1/5)),
+                  label = FALSE, include.lowest = TRUE)
+
 
 
 zed <- circul(x = myData, method = "cmeans", tuneLength = 3,
