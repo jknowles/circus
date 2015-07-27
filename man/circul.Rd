@@ -14,13 +14,13 @@ circul(x, method = "cmeans", metric = NULL, circulControl = NULL,
 
 \item{metric}{a character representing the performance metric to calculate}
 
+\item{circulControl}{a list of control parameters}
+
 \item{tuneGrid}{a tuning grid of paramater values}
 
 \item{modelType}{the type of model}
 
 \item{tuneLength}{the length of the tuneGrid}
-
-\item{cirControl}{a list of control parameters}
 }
 \value{
 a data.frame with performance metrics

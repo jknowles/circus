@@ -5,7 +5,7 @@
 #' @param ... additional arguments for the regex
 #'
 #' @return a list or list of lists of model objects
-#' @details Based on the getModelInfo function in the \link{\code{caret}} package
+#' @details Based on the getModelInfo function in the \code{caret} package
 #' @export
 getModelInfo <- function(model = NULL, regex = TRUE, ...) {
   load(system.file("models/models.RData", package = "circul"))

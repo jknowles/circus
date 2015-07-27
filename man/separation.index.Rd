@@ -8,6 +8,8 @@ separation.index(clres, x)
 }
 \arguments{
 \item{clres}{results of a cluster algorithm}
+
+\item{x}{a dataset that the cluster algorithm was fit on}
 }
 \value{
 a numeric value for the cluster performance

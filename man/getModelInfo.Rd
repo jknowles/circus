@@ -20,6 +20,6 @@ a list or list of lists of model objects
 Get model info from model library
 }
 \details{
-Based on the getModelInfo function in the \link{\code{caret}} package
+Based on the getModelInfo function in the \code{caret} package
 }
 

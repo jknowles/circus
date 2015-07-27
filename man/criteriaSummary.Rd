@@ -10,7 +10,7 @@ criteriaSummary(clres, metric = "Silhouette")
 \item{clres}{results of a cluster algorithm}
 
 \item{metric}{a character representing the abbreviation of the metric, see
-\link{\code{clusterCrit}} for details, "Silhouette" is default}
+\code{\link{clusterCrit}} for details, "Silhouette" is default}
 }
 \value{
 a numeric value for the cluster performance

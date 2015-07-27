@@ -3,7 +3,7 @@
 #' @param x a data.frame consisting of measures to be clustered
 #' @param method a method in the circul model library, character
 #' @param metric a character representing the performance metric to calculate
-#' @param cirControl a list of control parameters
+#' @param circulControl a list of control parameters
 #' @param tuneGrid a tuning grid of paramater values
 #' @param modelType the type of model
 #' @param tuneLength the length of the tuneGrid
@@ -103,14 +103,6 @@ circul <- function(x, method = 'cmeans',
 }
 
 
-#
-# m1 <- modelInfo$fit(x = iris[idx1, 1:4], param = grid1[2,])
-#
-# pred1 <- modelInfo$predict(m1, newdata = iris[idx2, 1:4])
-#
-#
-#
-#
 # circus.default <- function(x, y, method = 'bclust',
 #                            preProcess = NULL, ...,
 #                            weights = NULL,

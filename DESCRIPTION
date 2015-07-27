@@ -10,6 +10,7 @@ Depends:
   e1071,
   caret,
   clusterCrit
+Suggests:
+  testthat
 License: MIT + file LICENSE
 LazyData: true
-VignetteBuilder: knitr

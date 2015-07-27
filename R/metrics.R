@@ -25,7 +25,7 @@ fuzzySummary <- function(clres, metric = 'pe'){
 #'
 #' @param clres results of a cluster algorithm
 #' @param metric a character representing the abbreviation of the metric, see
-#' \link{\code{clusterCrit}} for details, "Silhouette" is default
+#' \code{\link{clusterCrit}} for details, "Silhouette" is default
 #' @return a numeric value for the cluster performance
 #' @importFrom clusterCrit intCriteria
 #' @export
@@ -130,6 +130,7 @@ proportion.exponent <- function(clres) {
 #' Calculate the separation index cluster performance metric
 #'
 #' @param clres results of a cluster algorithm
+#' @param x a dataset that the cluster algorithm was fit on
 #' @return a numeric value for the cluster performance
 separation.index <- function(clres, x) {
   xrows <- dim(clres$me)[1]
