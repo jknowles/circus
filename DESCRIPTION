@@ -12,5 +12,7 @@ Depends:
   clusterCrit
 Suggests:
   testthat
+  knitr,
+  rmarkdown
 License: MIT + file LICENSE
 LazyData: true
