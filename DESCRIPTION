@@ -11,7 +11,7 @@ Depends:
   caret,
   clusterCrit
 Suggests:
-  testthat
+  testthat,
   knitr,
   rmarkdown
 License: MIT + file LICENSE
